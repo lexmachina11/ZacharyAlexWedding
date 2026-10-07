@@ -1,476 +1,64 @@
-:root {
-    --background: #ffffff;
-    --text: #1c1c1c;
-    --muted-text: #767676;
-    --border: #e8e8e8;
-    --overlay: rgba(0, 0, 0, 0.9);
-    --page-width: 1440px;
-    --page-padding: clamp(1rem, 4vw, 4rem);
-}
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    margin: 0;
-    background: var(--background);
-    color: var(--text);
-    font-family:
-        "Helvetica Neue",
-        Helvetica,
-        Arial,
-        sans-serif;
-    -webkit-font-smoothing: antialiased;
-}
-
-button,
-a {
-    -webkit-tap-highlight-color: transparent;
-}
-
-img,
-video {
-    display: block;
-    max-width: 100%;
-}
-
-/* ---------------------------------------------------------
-   Top bar
-   --------------------------------------------------------- */
-
-.top-bar {
-    min-height: 74px;
-    padding: 0 var(--page-padding);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    background: var(--background);
-}
-
-.couple-name {
-    color: var(--text);
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 1.25rem;
-    text-decoration: none;
-}
-
-.wedding-date {
-    margin: 0;
-    color: var(--muted-text);
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-}
-
-/* ---------------------------------------------------------
-   Hero
-   --------------------------------------------------------- */
-
-.hero {
-    position: relative;
-    width: 100%;
-    height: clamp(420px, 70vh, 850px);
-    overflow: hidden;
-    background: #161616;
-}
-
-.hero-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(
-            to top,
-            rgba(0, 0, 0, 0.48),
-            rgba(0, 0, 0, 0.03) 55%,
-            rgba(0, 0, 0, 0.08)
-        );
-    pointer-events: none;
-}
-
-.hero-content {
-    position: absolute;
-    left: var(--page-padding);
-    bottom: clamp(2rem, 6vw, 5rem);
-    color: #ffffff;
-}
-
-.hero-content h1 {
-    margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(2.75rem, 8vw, 7rem);
-    font-weight: 400;
-    letter-spacing: -0.04em;
-    line-height: 0.95;
-}
-
-.hero-kicker {
-    margin: 0 0 0.75rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-}
-
-/* ---------------------------------------------------------
-   Category navigation
-   --------------------------------------------------------- */
-
-.category-nav {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    border-bottom: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(12px);
-}
-
-.category-nav-inner {
-    max-width: var(--page-width);
-    margin: 0 auto;
-    padding: 0 var(--page-padding);
-    display: flex;
-    gap: clamp(1.5rem, 5vw, 4rem);
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.category-nav-inner::-webkit-scrollbar {
-    display: none;
-}
-
-.category-nav a {
-    flex: 0 0 auto;
-    padding: 1.25rem 0;
-    color: var(--text);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.category-nav a:hover {
-    opacity: 0.55;
-}
-
-/* ---------------------------------------------------------
-   Gallery
-   --------------------------------------------------------- */
-
-.gallery-container {
-    max-width: var(--page-width);
-    margin: 0 auto;
-    padding: 0 var(--page-padding) 8rem;
-}
-
-.gallery-status {
-    padding: 5rem 0;
-    color: var(--muted-text);
-    text-align: center;
-}
-
-.gallery-section {
-    padding-top: clamp(4rem, 8vw, 8rem);
-    scroll-margin-top: 65px;
-}
-
-.gallery-heading {
-    margin-bottom: clamp(1.5rem, 4vw, 3rem);
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-.gallery-heading h2 {
-    margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(2rem, 4vw, 3.75rem);
-    font-weight: 400;
-    letter-spacing: -0.025em;
-}
-
-.gallery-count {
-    color: var(--muted-text);
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(0.5rem, 1.5vw, 1.25rem);
-}
-
-.gallery-item {
-    position: relative;
-    padding: 0;
-    overflow: hidden;
-    border: 0;
-    background: #f1f1f1;
-    cursor: zoom-in;
-    aspect-ratio: 4 / 5;
-}
-
-.gallery-item:nth-child(5n + 2),
-.gallery-item:nth-child(5n + 5) {
-    aspect-ratio: 4 / 3;
-}
-
-.gallery-item img,
-.gallery-item video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition:
-        transform 400ms ease,
-        opacity 250ms ease;
-}
-
-.gallery-item img {
-    opacity: 0;
-}
-
-.gallery-item img.is-loaded {
-    opacity: 1;
-}
-
-.gallery-item:hover img,
-.gallery-item:hover video {
-    transform: scale(1.025);
-}
-
-/* Video thumbnail button */
-
-.video-item {
-    cursor: pointer;
-}
-
-.video-thumbnail {
-    pointer-events: none;
-}
-
-.video-play-badge {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 62px;
-    height: 62px;
-    display: grid;
-    place-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.25);
-    color: #ffffff;
-    font-size: 1.1rem;
-    line-height: 1;
-    transform: translate(-50%, -50%);
-    backdrop-filter: blur(6px);
-    transition:
-        background 200ms ease,
-        transform 200ms ease;
-}
-
-.gallery-item:hover .video-play-badge {
-    background: rgba(0, 0, 0, 0.5);
-    transform: translate(-50%, -50%) scale(1.05);
-}
-
-/* ---------------------------------------------------------
-   Lightbox
-   --------------------------------------------------------- */
-
-.lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    padding: clamp(1rem, 4vw, 4rem);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: var(--overlay);
-}
-
-.lightbox.is-open {
-    display: flex;
-}
-
-.lightbox-close {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 110;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-    cursor: pointer;
-    font-size: 2rem;
-    font-weight: 200;
-    line-height: 1;
-}
-
-.lightbox-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.lightbox-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.lightbox-content img,
-.lightbox-content video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.lightbox-content video {
-    width: min(1200px, 100%);
-}
-
-/* Prevent page scrolling while viewer is open. */
-
-body.lightbox-open {
-    overflow: hidden;
-}
-
-/* ---------------------------------------------------------
-   Tablet
-   --------------------------------------------------------- */
-
-@media (max-width: 900px) {
-    .gallery-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+@layer components {
+    .nav-link {
+        @apply
+            text-[#777]
+            no-underline
+            transition-colors
+            duration-150
+            hover:text-[#222]
+            focus-visible:text-[#222]
+            motion-reduce:transition-none;
     }
 
-    .hero {
-        height: min(70vh, 700px);
-    }
-}
-
-/* ---------------------------------------------------------
-   Mobile
-   --------------------------------------------------------- */
-
-@media (max-width: 600px) {
-    :root {
-        --page-padding: 1rem;
-    }
-
-    .top-bar {
-        min-height: 64px;
+    /*
+     * Desktop navigation
+     */
+    .desktop-nav .nav-link {
+        @apply
+            relative
+            shrink-0
+            whitespace-nowrap
+            py-[1.1rem]
+            text-[0.68rem]
+            leading-[1.4]
+            tracking-[0.01em];
     }
 
-    .couple-name {
-        font-size: 1.05rem;
+    .desktop-nav .nav-link::after {
+        content: "";
+
+        @apply
+            absolute
+            right-0
+            bottom-2
+            left-0
+            h-px
+            origin-center
+            scale-x-0
+            bg-[#222]
+            transition-transform
+            duration-200
+            motion-reduce:transition-none;
     }
 
-    .wedding-date {
-        font-size: 0.62rem;
-        letter-spacing: 0.08em;
+    .desktop-nav .nav-link:hover::after,
+    .desktop-nav .nav-link:focus-visible::after {
+        @apply scale-x-100;
     }
 
-    .hero {
-        height: 65svh;
-        min-height: 430px;
-    }
-
-    .hero-content {
-        bottom: 2rem;
-    }
-
-    .category-nav-inner {
-        gap: 1.75rem;
-    }
-
-    .category-nav a {
-        padding: 1rem 0;
-        font-size: 0.68rem;
-    }
-
-    .gallery-container {
-        padding-bottom: 4rem;
-    }
-
-    .gallery-section {
-        padding-top: 4rem;
-    }
-
-    .gallery-heading {
-        margin-bottom: 1.25rem;
-    }
-
-    .gallery-heading h2 {
-        font-size: 2rem;
-    }
-
-    .gallery-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.4rem;
-    }
-
-    .gallery-item,
-    .gallery-item:nth-child(5n + 2),
-    .gallery-item:nth-child(5n + 5) {
-        aspect-ratio: 4 / 5;
-    }
-
-    .video-play-badge {
-        width: 48px;
-        height: 48px;
-        font-size: 0.9rem;
-    }
-
-    .lightbox {
-        padding: 0.75rem;
-    }
-}
-
-/* ---------------------------------------------------------
-   Very small screens
-   --------------------------------------------------------- */
-
-@media (max-width: 380px) {
-    .wedding-date {
-        display: none;
-    }
-}
-
-/* ---------------------------------------------------------
-   Reduced-motion accessibility
-   --------------------------------------------------------- */
-
-@media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
-
-    .gallery-item img,
-    .gallery-item video,
-    .video-play-badge {
-        transition: none;
+    /*
+     * Dropdown navigation
+     */
+    .mobile-nav .nav-link {
+        @apply
+            block
+            w-full
+            border-b
+            border-[#f3f3f3]
+            py-4
+            text-[0.7rem]
+            font-medium
+            tracking-[0.025em]
+            last:border-b-0;
     }
 }

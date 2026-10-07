@@ -26,9 +26,6 @@ const lightboxClose = document.getElementById("lightbox-close");
 
 let lastFocusedElement = null;
 
-/**
- * Load all gallery data from gallery.json.
- */
 async function loadGallery() {
     try {
         const response = await fetch(GALLERY_URL);
@@ -48,7 +45,15 @@ async function loadGallery() {
         galleryContainer.innerHTML = "";
 
         const errorMessage = document.createElement("p");
-        errorMessage.className = "gallery-status";
+
+        errorMessage.className = `
+            m-0
+            py-28
+            text-center
+            text-[0.8rem]
+            text-[#777]
+        `;
+
         errorMessage.textContent =
             "The gallery could not be loaded. Please try again later.";
 
@@ -56,9 +61,6 @@ async function loadGallery() {
     }
 }
 
-/**
- * Render one section for each defined category.
- */
 function renderGallery(items) {
     galleryContainer.innerHTML = "";
 
@@ -68,50 +70,136 @@ function renderGallery(items) {
         );
 
         const section = document.createElement("section");
-        section.className = "gallery-section";
+
         section.id = category.id;
 
+        section.className = `
+            mx-auto
+            scroll-mt-20
+            pt-18
+            min-[601px]:pt-[clamp(5rem,8vw,8rem)]
+            min-[1200px]:max-w-[1500px]
+        `;
+
         const heading = document.createElement("div");
-        heading.className = "gallery-heading";
+
+        heading.className = `
+            mb-11
+            flex
+            flex-col
+            items-center
+            justify-center
+            gap-[0.8rem]
+            text-center
+            min-[601px]:mb-[clamp(3rem,5vw,5rem)]
+        `;
 
         const title = document.createElement("h2");
+
+        title.className = `
+            m-0
+            text-[1.45rem]
+            leading-[1.2]
+            font-semibold
+            tracking-[0.005em]
+            text-[#222]
+            min-[601px]:text-[clamp(1.5rem,2.4vw,2.1rem)]
+        `;
+
         title.textContent = category.name;
 
-        const count = document.createElement("span");
-        count.className = "gallery-count";
-
-        const itemLabel =
-            category.name === "Videos" ? "films" : "photos";
-
-        count.textContent =
-            `${categoryItems.length} ${itemLabel}`;
-
         heading.appendChild(title);
-        heading.appendChild(count);
 
         const grid = document.createElement("div");
-        grid.className = "gallery-grid";
 
-        categoryItems.forEach((item, index) => {
-            const element = createGalleryItem(
-                item,
-                category.name,
-                index
-            );
-
-            grid.appendChild(element);
-        });
+        grid.className = `
+            grid
+            grid-cols-2
+            gap-[2px]
+            min-[601px]:grid-cols-3
+            min-[901px]:grid-cols-4
+        `;
 
         section.appendChild(heading);
         section.appendChild(grid);
+
+        renderMasonryItems(
+            grid,
+            categoryItems,
+            category.name
+        );
 
         galleryContainer.appendChild(section);
     });
 }
 
-/**
- * Create either an image or video gallery item.
- */
+function renderMasonryItems(
+    container,
+    items,
+    categoryName
+) {
+    function getColumnCount() {
+        if (window.innerWidth >= 901) {
+            return 4;
+        }
+
+        if (window.innerWidth >= 601) {
+            return 3;
+        }
+
+        return 2;
+    }
+
+    function render() {
+        const columnCount = getColumnCount();
+
+        container.innerHTML = "";
+
+        const columns = [];
+
+        for (let i = 0; i < columnCount; i += 1) {
+            const column = document.createElement("div");
+
+            column.className = `
+                flex
+                min-w-0
+                flex-col
+                gap-[2px]
+            `;
+
+            columns.push(column);
+            container.appendChild(column);
+        }
+
+        items.forEach((item, index) => {
+            const element = createGalleryItem(
+                item,
+                categoryName,
+                index
+            );
+
+            const columnIndex = index % columnCount;
+
+            columns[columnIndex].appendChild(element);
+        });
+    }
+
+    render();
+
+    let previousColumnCount = getColumnCount();
+
+    window.addEventListener("resize", () => {
+        const columnCount = getColumnCount();
+
+        if (columnCount === previousColumnCount) {
+            return;
+        }
+
+        previousColumnCount = columnCount;
+        render();
+    });
+}
+
 function createGalleryItem(item, categoryName, index) {
     if (categoryName === "Videos") {
         return createVideoItem(item, index);
@@ -120,12 +208,54 @@ function createGalleryItem(item, categoryName, index) {
     return createImageItem(item, categoryName, index);
 }
 
-/**
- * Create a lazily-loaded image item.
- */
+function getGalleryItemClasses() {
+    return `
+        group
+        relative
+        block
+        w-full
+        cursor-zoom-in
+        overflow-hidden
+        rounded-none
+        border-0
+        bg-[#ededed]
+        p-0
+    `;
+}
+
+function getImageClasses() {
+    return `
+        block
+        h-auto
+        w-full
+        max-w-full
+        transition-[transform,opacity]
+        duration-500
+        ease-[cubic-bezier(0.2,0.6,0.2,1)]
+        group-hover:scale-[1.018]
+        motion-reduce:transition-none
+    `;
+}
+
+function getMediaClasses() {
+    return `
+        block
+        h-full
+        w-full
+        max-w-full
+        object-cover
+        transition-[transform,opacity]
+        duration-500
+        ease-[cubic-bezier(0.2,0.6,0.2,1)]
+        group-hover:scale-[1.018]
+        motion-reduce:transition-none
+    `;
+}
+
 function createImageItem(item, categoryName, index) {
     const button = document.createElement("button");
-    button.className = "gallery-item";
+
+    button.className = getGalleryItemClasses();
     button.type = "button";
 
     button.setAttribute(
@@ -137,23 +267,22 @@ function createImageItem(item, categoryName, index) {
 
     image.src = item.url;
     image.alt = `${categoryName} wedding photo ${index + 1}`;
-
-    /*
-     * Native browser lazy loading.
-     */
     image.loading = "lazy";
     image.decoding = "async";
 
+    image.className = `
+        ${getImageClasses()}
+        opacity-0
+    `;
+
     image.addEventListener("load", () => {
-        image.classList.add("is-loaded");
+        image.classList.remove("opacity-0");
+        image.classList.add("opacity-100");
     });
 
-    /*
-     * A cached image may already be complete before the
-     * load listener executes.
-     */
     if (image.complete) {
-        image.classList.add("is-loaded");
+        image.classList.remove("opacity-0");
+        image.classList.add("opacity-100");
     }
 
     button.appendChild(image);
@@ -169,15 +298,14 @@ function createImageItem(item, categoryName, index) {
     return button;
 }
 
-/**
- * Create a video thumbnail.
- *
- * The muted video itself acts as its thumbnail. It does
- * not play inside the gallery grid.
- */
 function createVideoItem(item, index) {
     const button = document.createElement("button");
-    button.className = "gallery-item video-item";
+
+    button.className = `
+        ${getGalleryItemClasses()}
+        cursor-pointer
+    `;
+
     button.type = "button";
 
     button.setAttribute(
@@ -187,19 +315,32 @@ function createVideoItem(item, index) {
 
     const video = document.createElement("video");
 
-    video.className = "video-thumbnail";
+    video.className = `
+        pointer-events-none
+        block
+        h-auto
+        w-full
+        max-w-full
+        transition-transform
+        duration-500
+        ease-[cubic-bezier(0.2,0.6,0.2,1)]
+        group-hover:scale-[1.018]
+        motion-reduce:transition-none
+    `;
+
     video.src = item.url;
     video.muted = true;
     video.playsInline = true;
     video.preload = "metadata";
 
-    /*
-     * Move slightly into the video when possible so the
-     * browser can display a useful frame as the thumbnail.
-     */
     video.addEventListener(
         "loadedmetadata",
         () => {
+            if (video.videoWidth && video.videoHeight) {
+                button.style.aspectRatio =
+                    `${video.videoWidth} / ${video.videoHeight}`;
+            }
+
             if (
                 Number.isFinite(video.duration) &&
                 video.duration > 0.1
@@ -213,7 +354,34 @@ function createVideoItem(item, index) {
     );
 
     const playBadge = document.createElement("span");
-    playBadge.className = "video-play-badge";
+
+    playBadge.className = `
+        pointer-events-none
+        absolute
+        top-1/2
+        left-1/2
+        grid
+        size-[46px]
+        -translate-x-1/2
+        -translate-y-1/2
+        place-items-center
+        rounded-full
+        border
+        border-white/80
+        bg-black/20
+        pl-[3px]
+        text-[0.72rem]
+        text-white
+        backdrop-blur-[5px]
+        transition-[background-color,scale]
+        duration-200
+        group-hover:scale-[1.06]
+        group-hover:bg-black/40
+        motion-reduce:transition-none
+        min-[601px]:size-[58px]
+        min-[601px]:text-[0.9rem]
+    `;
+
     playBadge.setAttribute("aria-hidden", "true");
     playBadge.textContent = "▶";
 
@@ -227,9 +395,6 @@ function createVideoItem(item, index) {
     return button;
 }
 
-/**
- * Open an image in the full-screen viewer.
- */
 function openImageLightbox(url, alt, triggerElement) {
     lastFocusedElement = triggerElement;
 
@@ -240,18 +405,20 @@ function openImageLightbox(url, alt, triggerElement) {
     image.src = url;
     image.alt = alt;
 
+    image.className = `
+        block
+        h-auto
+        max-h-full
+        w-auto
+        max-w-full
+        object-contain
+    `;
+
     lightboxContent.appendChild(image);
 
     showLightbox();
 }
 
-/**
- * Open a video in the full-screen viewer.
- *
- * Autoplay is deliberately disabled. The user sees the
- * enlarged video thumbnail and chooses when to press play
- * using the native video controls.
- */
 function openVideoLightbox(url, triggerElement) {
     lastFocusedElement = triggerElement;
 
@@ -264,26 +431,31 @@ function openVideoLightbox(url, triggerElement) {
     video.playsInline = true;
     video.preload = "metadata";
 
+    video.className = `
+        block
+        h-auto
+        max-h-full
+        w-full
+        max-w-[1200px]
+        object-contain
+    `;
+
     lightboxContent.appendChild(video);
 
     showLightbox();
 }
 
-/**
- * Display the overlay.
- */
 function showLightbox() {
-    lightbox.classList.add("is-open");
+    lightbox.classList.remove("hidden");
+    lightbox.classList.add("flex");
+
     lightbox.setAttribute("aria-hidden", "false");
 
-    document.body.classList.add("lightbox-open");
+    document.body.classList.add("overflow-hidden");
 
     lightboxClose.focus();
 }
 
-/**
- * Close the overlay and stop any currently playing video.
- */
 function closeLightbox() {
     const openVideo = lightboxContent.querySelector("video");
 
@@ -295,24 +467,20 @@ function closeLightbox() {
 
     lightboxContent.innerHTML = "";
 
-    lightbox.classList.remove("is-open");
+    lightbox.classList.remove("flex");
+    lightbox.classList.add("hidden");
+
     lightbox.setAttribute("aria-hidden", "true");
 
-    document.body.classList.remove("lightbox-open");
+    document.body.classList.remove("overflow-hidden");
 
     if (lastFocusedElement) {
         lastFocusedElement.focus();
     }
 }
 
-/**
- * Close with the close button.
- */
 lightboxClose.addEventListener("click", closeLightbox);
 
-/**
- * Close when clicking the dark background outside the media.
- */
 lightbox.addEventListener("click", (event) => {
     if (
         event.target === lightbox ||
@@ -322,19 +490,13 @@ lightbox.addEventListener("click", (event) => {
     }
 });
 
-/**
- * Keyboard support.
- */
 document.addEventListener("keydown", (event) => {
     if (
         event.key === "Escape" &&
-        lightbox.classList.contains("is-open")
+        !lightbox.classList.contains("hidden")
     ) {
         closeLightbox();
     }
 });
 
-/**
- * Begin loading the JSON gallery.
- */
 loadGallery();

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html
+    lang="en"
+    class="scroll-smooth motion-reduce:scroll-auto"
+>
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -12,30 +16,155 @@
         content="Wedding photo and video gallery."
     >
 
-    <title>Alex & Zachary — Wedding Gallery</title>
+    <title>Alex &amp; Zachary — Wedding Gallery</title>
 
-    <link rel="stylesheet" href="styles.css">
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Custom Styles -->
+     <link
+        rel="stylesheet"
+        type="text/tailwindcss"
+        href="style.css"
+    >
 </head>
 
-<body>
-    <header class="top-bar">
-        <a class="couple-name" href="#top">
-            Alex &amp; Zachary
-        </a>
+<body
+    class="
+        m-0
+        bg-white
+        text-[#222]
+        text-sm
+        font-normal
+        antialiased
+        [font-family:'Montserrat',Arial,sans-serif]
+        [text-rendering:optimizeLegibility]
+    "
+>
+    <header
+        class="
+            relative
+            z-30
+            flex
+            min-h-[104px]
+            w-full
+            flex-col
+            items-center
+            justify-center
+            gap-1
+            bg-white
+            px-4
+            py-5
+            min-[601px]:px-[clamp(1.5rem,3vw,3rem)]
+            min-[901px]:py-6
+        "
+    >
+        <h1
+            class="
+                text-center
+                text-[clamp(1.15rem,5vw,1.5rem)]
+                font-semibold
+                leading-tight
+                tracking-[0.01em]
+                uppercase
+                min-[601px]:text-[clamp(1.4rem,3.5vw,2rem)]
+                min-[601px]:tracking-[0.025em]
+                min-[901px]:text-[clamp(1.7rem,2.7vw,2.65rem)]
+            "
+        >
+            Alex &amp; Zachary's Wedding
+        </h1>
 
-        <p class="wedding-date">
+        <p
+            class="
+                mt-2
+                text-center
+                text-[0.9rem]
+                font-semibold
+                tracking-[0.035em]
+                text-[#444]
+                min-[601px]:text-[1rem]
+            "
+        >
             May 30, 2026
+        </p>
+
+        <p
+            class="
+                text-center
+                text-[0.65rem]
+                font-medium
+                tracking-[0.025em]
+                text-[#777]
+                min-[601px]:text-[0.7rem]
+            "
+        >
+            Photography by
+            <a
+                href="https://philippestudiopro.com/weddings"
+                class="
+                    font-semibold
+                    text-[#555]
+                    underline
+                    decoration-[#bbb]
+                    decoration-1
+                    underline-offset-2
+                    transition-colors
+                    duration-150
+                    hover:text-[#111]
+                    hover:decoration-[#555]
+                    focus-visible:text-[#111]
+                    focus-visible:outline-none
+                    focus-visible:ring-1
+                    focus-visible:ring-[#777]
+                    focus-visible:ring-offset-2
+                "
+            >
+                Philippe Studio Pro
+            </a>
         </p>
     </header>
 
     <main id="top">
-        <!--
-            The hero video is intentionally hard-coded rather than loaded
-            from gallery.json.
-        -->
-        <section class="hero" aria-label="Wedding film">
+        <section
+            class="
+                relative
+                h-[62svh]
+                min-h-[390px]
+                max-h-[580px]
+                w-full
+                overflow-hidden
+                bg-[#eee]
+                min-[601px]:h-[clamp(400px,62vw,560px)]
+                min-[601px]:min-h-0
+                min-[601px]:max-h-none
+                min-[901px]:h-[clamp(430px,55vw,680px)]
+            "
+            aria-label="Wedding film"
+        >
             <video
-                class="hero-video"
+                class="
+                    block
+                    h-full
+                    w-full
+                    max-w-full
+                    object-cover
+                    object-center
+                "
                 autoplay
                 muted
                 loop
@@ -50,39 +179,205 @@
                 Your browser does not support HTML video.
             </video>
 
-            <div class="hero-overlay" aria-hidden="true"></div>
-
-            <div class="hero-content">
-                <p class="hero-kicker">Our Wedding</p>
-                <h1>Alex &amp; Zachary</h1>
-            </div>
-        </section>
+            <div
+                class="
+                    pointer-events-none
+                    absolute
+                    inset-0
+                    bg-[linear-gradient(to_top,rgba(0,0,0,0.08),transparent_35%)]
+                "
+                aria-hidden="true"
+            ></div>
+        </section>                
 
         <nav
-            class="category-nav"
+            class="
+                relative
+                z-20
+                w-full
+                border-b
+                border-[#f3f3f3]
+                bg-white/[0.97]
+            "
             aria-label="Wedding gallery categories"
         >
-            <div class="category-nav-inner">
-                <a href="#getting-ready">Getting Ready</a>
-                <a href="#ceremony">Ceremony</a>
-                <a href="#reception">Reception</a>
-                <a href="#videos">Videos</a>
+            <!-- Mobile / tablet dropdown -->
+            <details
+                id="mobile-nav"
+                class="
+                    mobile-nav
+                    group
+                    relative
+                    min-[901px]:hidden
+                "
+            >
+                <summary
+                    class="
+                        flex
+                        min-h-[64px]
+                        cursor-pointer
+                        list-none
+                        items-center
+                        justify-between
+                        px-4
+                        text-[0.68rem]
+                        font-medium
+                        tracking-[0.04em]
+                        text-[#555]
+                        uppercase
+                        [&::-webkit-details-marker]:hidden
+                        min-[601px]:min-h-[74px]
+                        min-[601px]:px-[clamp(1.5rem,3vw,3rem)]
+                    "
+                >
+                    <span>Gallery</span>
+
+                    <svg
+                        class="
+                            size-4
+                            transition-transform
+                            duration-200
+                            group-open:rotate-180
+                            motion-reduce:transition-none
+                        "
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="m6 9 6 6 6-6"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </summary>
+
+                <div
+                    class="
+                        absolute
+                        top-full
+                        left-0
+                        w-full
+                        border-t
+                        border-[#f3f3f3]
+                        bg-white
+                        shadow-[0_12px_30px_rgba(0,0,0,0.06)]
+                    "
+                >
+                    <div class="flex flex-col px-4 py-2 min-[601px]:px-[clamp(1.5rem,3vw,3rem)]">
+                        <a href="#getting-ready" class="nav-link">
+                            Bride Getting Ready
+                        </a>
+                        <a href="#getting-ready" class="nav-link">
+                            Groom Getting Ready & Portraits
+                        </a>
+                        <a href="#ceremony" class="nav-link">
+                            Ceremony
+                        </a>
+                        <a href="#reception" class="nav-link">
+                            Family Portraits
+                        </a>
+                        <a href="#reception" class="nav-link">
+                            Cocktail Hour
+                        </a>
+                        <a href="#reception" class="nav-link">
+                            Bride & Groom Portraits
+                        </a>
+                        <a href="#reception" class="nav-link">
+                            Reception
+                        </a>
+                        <a href="#videos" class="nav-link">
+                            Videos
+                        </a>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Desktop horizontal navigation -->
+            <div
+                class="
+                    desktop-nav
+                    mx-auto
+                    hidden
+                    min-h-[92px]
+                    w-full
+                    max-w-[1500px]
+                    items-center
+                    justify-center
+                    gap-[clamp(1.3rem,2.6vw,2.75rem)]
+                    px-[clamp(1.5rem,3vw,3rem)]
+                    min-[901px]:flex
+                "
+            >
+                <a href="#getting-ready" class="nav-link">
+                    Bride Getting Ready
+                </a>
+                <a href="#getting-ready" class="nav-link">
+                    Groom Getting Ready & Portraits
+                </a>
+                <a href="#ceremony" class="nav-link">
+                    Ceremony
+                </a>
+                <a href="#reception" class="nav-link">
+                    Family Portraits
+                </a>
+                <a href="#reception" class="nav-link">
+                    Cocktail Hour
+                </a>
+                <a href="#reception" class="nav-link">
+                    Bride & Groom Portraits
+                </a>
+                <a href="#reception" class="nav-link">
+                    Reception
+                </a>
+                <a href="#videos" class="nav-link">
+                    Videos
+                </a>
             </div>
         </nav>
 
         <div
             id="gallery"
-            class="gallery-container"
+            class="
+                mx-auto
+                w-full
+                px-2
+                pb-16
+                min-[601px]:px-[clamp(1.5rem,3vw,3rem)]
+                min-[601px]:pb-32
+            "
             aria-live="polite"
         >
-            <p class="gallery-status">Loading gallery…</p>
+            <p
+                class="
+                    m-0
+                    py-28
+                    text-center
+                    text-[0.8rem]
+                    text-[#777]
+                "
+            >
+                Loading gallery…
+            </p>
         </div>
     </main>
 
     <!-- Media lightbox -->
     <div
         id="lightbox"
-        class="lightbox"
+        class="
+            fixed
+            inset-0
+            z-[1000]
+            hidden
+            items-center
+            justify-center
+            bg-[#111]/96
+            p-3
+            min-[601px]:p-[clamp(1rem,4vw,3rem)]
+        "
         role="dialog"
         aria-modal="true"
         aria-hidden="true"
@@ -90,7 +385,30 @@
     >
         <button
             id="lightbox-close"
-            class="lightbox-close"
+            class="
+                fixed
+                top-3
+                right-3
+                z-[1010]
+                grid
+                size-11
+                cursor-pointer
+                place-items-center
+                rounded-full
+                border-0
+                bg-white/12
+                p-0
+                text-[1.8rem]
+                leading-none
+                font-light
+                text-white
+                transition-colors
+                duration-150
+                hover:bg-white/22
+                min-[601px]:top-[1.4rem]
+                min-[601px]:right-[1.4rem]
+                [font-family:Arial,sans-serif]
+            "
             type="button"
             aria-label="Close viewer"
         >
@@ -99,7 +417,13 @@
 
         <div
             id="lightbox-content"
-            class="lightbox-content"
+            class="
+                flex
+                h-full
+                w-full
+                items-center
+                justify-center
+            "
         ></div>
     </div>
 
