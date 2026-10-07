@@ -1,0 +1,85 @@
+[
+    {
+        "url": "media/getting-ready-01.jpg",
+        "category": "Getting Ready"
+    },
+    {
+        "url": "media/getting-ready-02.jpg",
+        "category": "Getting Ready"
+    },
+    {
+        "url": "media/getting-ready-03.jpg",
+        "category": "Getting Ready"
+    },
+    {
+        "url": "media/getting-ready-04.jpg",
+        "category": "Getting Ready"
+    },
+    {
+        "url": "media/getting-ready-05.jpg",
+        "category": "Getting Ready"
+    },
+
+    {
+        "url": "media/ceremony-01.jpg",
+        "category": "Ceremony"
+    },
+    {
+        "url": "media/ceremony-02.jpg",
+        "category": "Ceremony"
+    },
+    {
+        "url": "media/ceremony-03.jpg",
+        "category": "Ceremony"
+    },
+    {
+        "url": "media/ceremony-04.jpg",
+        "category": "Ceremony"
+    },
+    {
+        "url": "media/ceremony-05.jpg",
+        "category": "Ceremony"
+    },
+
+    {
+        "url": "media/reception-01.jpg",
+        "category": "Reception"
+    },
+    {
+        "url": "media/reception-02.jpg",
+        "category": "Reception"
+    },
+    {
+        "url": "media/reception-03.jpg",
+        "category": "Reception"
+    },
+    {
+        "url": "media/reception-04.jpg",
+        "category": "Reception"
+    },
+    {
+        "url": "media/reception-05.jpg",
+        "category": "Reception"
+    },
+
+    {
+        "url": "media/wedding-video-01.mp4",
+        "category": "Videos"
+    },
+    {
+        "url": "media/wedding-video-02.mp4",
+        "category": "Videos"
+    },
+    {
+        "url": "media/wedding-video-03.mp4",
+        "category": "Videos"
+    },
+    {
+        "url": "media/wedding-video-04.mp4",
+        "category": "Videos"
+    },
+    {
+        "url": "media/wedding-video-05.mp4",
+        "category": "Videos"
+    }
+]
