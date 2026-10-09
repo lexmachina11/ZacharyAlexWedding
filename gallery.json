@@ -1,105 +1,32 @@
 [
     {
-        "url": "https://images.unsplash.com/photo-1612812166620-a072f77ec45b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
+        "webUrl": "https://images.unsplash.com/photo-1612812166620-a072f77ec45b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "downloadUrl": "https://images.unsplash.com/photo-1612812166620-a072f77ec45b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "category": "BrideGettingReady",
+        "isFavorite": false
     },
     {
-        "url": "https://plus.unsplash.com/premium_photo-1729111978398-821b4930c4c2?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
+        "webUrl": "https://plus.unsplash.com/premium_photo-1729111978398-821b4930c4c2?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "downloadUrl": "https://plus.unsplash.com/premium_photo-1729111978398-821b4930c4c2?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "category": "BrideGettingReady",
+        "isFavorite": false
     },
     {
-        "url": "https://images.unsplash.com/photo-1642420919369-b61654081244?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
+        "webUrl": "https://images.unsplash.com/photo-1642420919369-b61654081244?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "downloadUrl": "https://images.unsplash.com/photo-1642420919369-b61654081244?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "category": "BrideGettingReady",
+        "isFavorite": false
     },
     {
-        "url": "https://plus.unsplash.com/premium_photo-1677545183884-421157b2da02?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
+        "webUrl": "https://plus.unsplash.com/premium_photo-1677545183884-421157b2da02?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "downloadUrl": "https://plus.unsplash.com/premium_photo-1677545183884-421157b2da02?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "category": "BrideGettingReady",
+        "isFavorite": false
     },
     {
-        "url": "https://images.unsplash.com/photo-1598935888738-cd2622bcd437?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
-    },
-    {
-        "url": "https://images.unsplash.com/photo-1612812166620-a072f77ec45b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
-    },
-    {
-        "url": "https://plus.unsplash.com/premium_photo-1729111978398-821b4930c4c2?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
-    },
-    {
-        "url": "https://images.unsplash.com/photo-1642420919369-b61654081244?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
-    },
-    {
-        "url": "https://plus.unsplash.com/premium_photo-1677545183884-421157b2da02?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
-    },
-    {
-        "url": "https://images.unsplash.com/photo-1598935888738-cd2622bcd437?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        "category": "Getting Ready"
-    },
-
-    {
-        "url": "media/ceremony-01.jpg",
-        "category": "Ceremony"
-    },
-    {
-        "url": "media/ceremony-02.jpg",
-        "category": "Ceremony"
-    },
-    {
-        "url": "media/ceremony-03.jpg",
-        "category": "Ceremony"
-    },
-    {
-        "url": "media/ceremony-04.jpg",
-        "category": "Ceremony"
-    },
-    {
-        "url": "media/ceremony-05.jpg",
-        "category": "Ceremony"
-    },
-
-    {
-        "url": "media/reception-01.jpg",
-        "category": "Reception"
-    },
-    {
-        "url": "media/reception-02.jpg",
-        "category": "Reception"
-    },
-    {
-        "url": "media/reception-03.jpg",
-        "category": "Reception"
-    },
-    {
-        "url": "media/reception-04.jpg",
-        "category": "Reception"
-    },
-    {
-        "url": "media/reception-05.jpg",
-        "category": "Reception"
-    },
-
-    {
-        "url": "media/wedding-video-01.mp4",
-        "category": "Videos"
-    },
-    {
-        "url": "media/wedding-video-02.mp4",
-        "category": "Videos"
-    },
-    {
-        "url": "media/wedding-video-03.mp4",
-        "category": "Videos"
-    },
-    {
-        "url": "media/wedding-video-04.mp4",
-        "category": "Videos"
-    },
-    {
-        "url": "media/wedding-video-05.mp4",
-        "category": "Videos"
+        "webUrl": "https://images.unsplash.com/photo-1598935888738-cd2622bcd437?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "downloadUrl": "https://images.unsplash.com/photo-1598935888738-cd2622bcd437?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "category": "BrideGettingReady",
+        "isFavorite": false
     }
 ]

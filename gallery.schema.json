@@ -1,0 +1,47 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "./gallery.schema.json",
+    "title": "Gallery",
+    "description": "Photos and videos displayed in the gallery.",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "webUrl",
+            "downloadUrl",
+            "category",
+            "isFavorite"
+        ],
+        "properties": {
+            "webUrl": {
+                "type": "string",
+                "minLength": 1,
+                "description": "URL or relative path to the photo or video web-size file."
+            },
+            "downloadUrl": {
+                "type": "string",
+                "minLength": 1,
+                "description": "URL or relative path to the photo or video full-size file."
+            },
+            "category": {
+                "type": "string",
+                "enum": [
+                    "BrideGettingReady",
+                    "GroomGettingReady",
+                    "Ceremony",
+                    "FamilyPortraits",
+                    "CocktailHour",
+                    "CouplePortraits",
+                    "Reception",
+                    "Videos"
+                ],
+                "description": "Gallery section in which this item will appear."
+            },
+            "isFavorite": {
+                "type": "boolean",
+                "description": "Flag to determine if item will be included in favorites section."
+            }
+        }
+    }
+}

@@ -1,20 +1,45 @@
+
 const GALLERY_URL = "gallery.json";
 
 const categories = [
     {
-        name: "Getting Ready",
-        id: "getting-ready"
+        name: "BrideGettingReady",
+        title: "Bride Getting Ready",
+        id: "bride-getting-ready"
+    },
+    {
+        name: "GroomGettingReady",
+        title: "Groom Getting Ready & Portraits",
+        id: "groom-getting-ready"
     },
     {
         name: "Ceremony",
+        title: "Ceremony",
         id: "ceremony"
     },
     {
+        name: "FamilyPortraits",
+        title: "Family Portraits",
+        id: "family-portraits"
+    },
+    {
+        name: "CoktailHour",
+        title: "Coktail Hour",
+        id: "cocktail-hour"
+    },
+    {
+        name: "CouplePortraits",
+        title: "Bride & Groom Portraits",
+        id: "couple-portraits"
+    },
+    {
         name: "Reception",
+        title: "Reception",
         id: "reception"
     },
     {
         name: "Videos",
+        title: "Videos",
         id: "videos"
     }
 ];
@@ -23,8 +48,10 @@ const galleryContainer = document.getElementById("gallery");
 const lightbox = document.getElementById("lightbox");
 const lightboxContent = document.getElementById("lightbox-content");
 const lightboxClose = document.getElementById("lightbox-close");
+const lightboxDownload = document.getElementById("lightbox-download");
 
 let lastFocusedElement = null;
+let currentDownload = null;
 
 async function loadGallery() {
     try {
@@ -106,7 +133,7 @@ function renderGallery(items) {
             min-[601px]:text-[clamp(1.5rem,2.4vw,2.1rem)]
         `;
 
-        title.textContent = category.name;
+        title.textContent = category.title;
 
         heading.appendChild(title);
 
@@ -265,7 +292,7 @@ function createImageItem(item, categoryName, index) {
 
     const image = document.createElement("img");
 
-    image.src = item.url;
+    image.src = item.webUrl;
     image.alt = `${categoryName} wedding photo ${index + 1}`;
     image.loading = "lazy";
     image.decoding = "async";
@@ -288,11 +315,7 @@ function createImageItem(item, categoryName, index) {
     button.appendChild(image);
 
     button.addEventListener("click", () => {
-        openImageLightbox(
-            item.url,
-            image.alt,
-            button
-        );
+        openImageLightbox(item, image.alt, button);
     });
 
     return button;
@@ -328,7 +351,7 @@ function createVideoItem(item, index) {
         motion-reduce:transition-none
     `;
 
-    video.src = item.url;
+    video.src = item.webUrl;
     video.muted = true;
     video.playsInline = true;
     video.preload = "metadata";
@@ -389,20 +412,21 @@ function createVideoItem(item, index) {
     button.appendChild(playBadge);
 
     button.addEventListener("click", () => {
-        openVideoLightbox(item.url, button);
+        openVideoLightbox(item, button);
     });
 
     return button;
 }
 
-function openImageLightbox(url, alt, triggerElement) {
+function openImageLightbox(item, alt, triggerElement) {
     lastFocusedElement = triggerElement;
+    setLightboxDownload(item.downloadUrl, "image");
 
     lightboxContent.innerHTML = "";
 
     const image = document.createElement("img");
 
-    image.src = url;
+    image.src = item.webUrl;
     image.alt = alt;
 
     image.className = `
@@ -419,14 +443,15 @@ function openImageLightbox(url, alt, triggerElement) {
     showLightbox();
 }
 
-function openVideoLightbox(url, triggerElement) {
+function openVideoLightbox(item, triggerElement) {
     lastFocusedElement = triggerElement;
+    setLightboxDownload(item.downloadUrl, "video");
 
     lightboxContent.innerHTML = "";
 
     const video = document.createElement("video");
 
-    video.src = url;
+    video.src = item.webUrl;
     video.controls = true;
     video.playsInline = true;
     video.preload = "metadata";
@@ -443,6 +468,82 @@ function openVideoLightbox(url, triggerElement) {
     lightboxContent.appendChild(video);
 
     showLightbox();
+}
+
+function setLightboxDownload(url, mediaType) {
+    currentDownload = url ? { url, mediaType } : null;
+    lightboxDownload.disabled = !currentDownload;
+}
+
+function getDownloadFilename(url, mediaType, mimeType) {
+    const parsedUrl = new URL(url, document.baseURI);
+    const lastSegment = decodeURIComponent(
+        parsedUrl.pathname.split("/").pop() || ""
+    );
+    const basename = lastSegment.replace(/[^a-zA-Z0-9._-]/g, "_") ||
+        (mediaType === "video" ? "wedding-video" : "wedding-photo");
+
+    if (/\.[a-zA-Z0-9]{2,5}$/.test(basename)) {
+        return basename;
+    }
+
+    const extensions = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp",
+        "image/avif": "avif",
+        "image/gif": "gif",
+        "video/mp4": "mp4",
+        "video/webm": "webm",
+        "video/quicktime": "mov"
+    };
+    const format = parsedUrl.searchParams.get("fm");
+    const extension = extensions[mimeType] ||
+        (format && /^[a-zA-Z0-9]{2,5}$/.test(format) ? format : null) ||
+        (mediaType === "video" ? "mp4" : "jpg");
+
+    return `${basename}.${extension}`;
+}
+
+async function downloadLightboxMedia() {
+    if (!currentDownload) {
+        return;
+    }
+
+    const { url, mediaType } = currentDownload;
+    lightboxDownload.disabled = true;
+    lightboxDownload.setAttribute("aria-busy", "true");
+
+    try {
+        // A Blob URL allows downloads from image hosts that permit CORS.
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Download request failed: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = blobUrl;
+        link.download = getDownloadFilename(url, mediaType, blob.type);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        // Give the browser time to begin the download before releasing the URL.
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+    } catch (error) {
+        console.error("Could not download gallery media:", error);
+        window.alert(
+            "The file could not be downloaded. The media host may be blocking " +
+            "downloads from this website."
+        );
+    } finally {
+        lightboxDownload.removeAttribute("aria-busy");
+        lightboxDownload.disabled = !currentDownload;
+    }
 }
 
 function showLightbox() {
@@ -466,6 +567,8 @@ function closeLightbox() {
     }
 
     lightboxContent.innerHTML = "";
+    currentDownload = null;
+    lightboxDownload.disabled = true;
 
     lightbox.classList.remove("flex");
     lightbox.classList.add("hidden");
@@ -480,6 +583,7 @@ function closeLightbox() {
 }
 
 lightboxClose.addEventListener("click", closeLightbox);
+lightboxDownload.addEventListener("click", downloadLightboxMedia);
 
 lightbox.addEventListener("click", (event) => {
     if (

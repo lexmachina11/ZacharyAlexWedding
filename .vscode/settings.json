@@ -1,0 +1,10 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/gallery.json"
+            ],
+            "url": "./gallery.schema.json"
+        }
+    ]
+}
