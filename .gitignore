@@ -1,0 +1,4 @@
+# Original 4K master (1.87 GB), too large for git.
+Alex + Zachary Wedding.mp4
+# Local film and teaser encodes. The site loads these from Azure blob storage.
+media/

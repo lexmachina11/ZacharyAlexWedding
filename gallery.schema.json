@@ -24,6 +24,21 @@
                 "minLength": 1,
                 "description": "URL or relative path to the photo or video full-size file."
             },
+            "previewUrl": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Optional URL or relative path to a preview of the photo or video, such as a thumbnail image or short preview clip."
+            },
+            "width": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Optional display width in pixels of the web-size image (or the video preview image). Used to reserve the tile's space before it loads."
+            },
+            "height": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Optional display height in pixels of the web-size image (or the video preview image). Used to reserve the tile's space before it loads."
+            },
             "category": {
                 "type": "string",
                 "enum": [

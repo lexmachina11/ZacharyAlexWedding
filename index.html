@@ -157,8 +157,11 @@
                 min-[901px]:h-[clamp(430px,55vw,680px)]
             "
             aria-label="Wedding film"
+            data-film-url="https://zachaslax.blob.core.windows.net/wedding/photos/film/wedding-film.mp4"
         >
+            <!-- Muted teaser of short clips cut from the full film -->
             <video
+                id="hero-teaser"
                 class="
                     block
                     h-full
@@ -166,19 +169,21 @@
                     max-w-full
                     object-cover
                     object-center
+                    opacity-85
+                    saturate-[0.85]
                 "
                 autoplay
                 muted
                 loop
                 playsinline
-                preload="metadata"
+                preload="auto"
+                poster="https://zachaslax.blob.core.windows.net/wedding/photos/film/hero-poster-v17.jpg"
+                aria-hidden="true"
             >
                 <source
-                    src="media/hero-wedding-film.mp4"
+                    src="https://zachaslax.blob.core.windows.net/wedding/photos/film/hero-teaser-v17.mp4"
                     type="video/mp4"
                 >
-
-                Your browser does not support HTML video.
             </video>
 
             <div
@@ -186,11 +191,85 @@
                     pointer-events-none
                     absolute
                     inset-0
-                    bg-[linear-gradient(to_top,rgba(0,0,0,0.08),transparent_35%)]
+                    bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.18),rgba(0,0,0,0.42))]
                 "
                 aria-hidden="true"
             ></div>
-        </section>                
+
+            <div
+                class="
+                    absolute
+                    inset-0
+                    flex
+                    items-center
+                    justify-center
+                "
+            >
+                <button
+                    id="hero-play"
+                    class="
+                        group
+                        flex
+                        cursor-pointer
+                        flex-col
+                        items-center
+                        gap-4
+                        border-0
+                        bg-transparent
+                        text-white
+                        focus-visible:outline-none
+                    "
+                    type="button"
+                    aria-label="Play the full wedding film"
+                >
+                    <span
+                        class="
+                            flex
+                            size-[4.5rem]
+                            items-center
+                            justify-center
+                            rounded-full
+                            border
+                            border-white/80
+                            bg-white/15
+                            backdrop-blur-sm
+                            transition
+                            duration-200
+                            group-hover:scale-105
+                            group-hover:bg-white/25
+                            group-focus-visible:ring-2
+                            group-focus-visible:ring-white
+                            group-focus-visible:ring-offset-2
+                            group-focus-visible:ring-offset-transparent
+                            motion-reduce:transition-none
+                            min-[601px]:size-[5.5rem]
+                        "
+                    >
+                        <svg
+                            class="ml-1 size-7 min-[601px]:size-8"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            aria-hidden="true"
+                        >
+                            <path d="M8 5.5v13a.5.5 0 0 0 .77.42l10-6.5a.5.5 0 0 0 0-.84l-10-6.5A.5.5 0 0 0 8 5.5Z" />
+                        </svg>
+                    </span>
+
+                    <span
+                        class="
+                            text-[0.7rem]
+                            font-semibold
+                            tracking-[0.2em]
+                            uppercase
+                            [text-shadow:0_1px_8px_rgba(0,0,0,0.35)]
+                            min-[601px]:text-[0.78rem]
+                        "
+                    >
+                        Watch the Film
+                    </span>
+                </button>
+            </div>
+        </section>
 
         <nav
             class="
@@ -269,22 +348,22 @@
                     "
                 >
                     <div class="flex flex-col px-4 py-2 min-[601px]:px-[clamp(1.5rem,3vw,3rem)]">
-                        <a href="#getting-ready" class="nav-link">
+                        <a href="#bride-getting-ready" class="nav-link">
                             Bride Getting Ready
                         </a>
-                        <a href="#getting-ready" class="nav-link">
+                        <a href="#groom-getting-ready" class="nav-link">
                             Groom Getting Ready & Portraits
                         </a>
                         <a href="#ceremony" class="nav-link">
                             Ceremony
                         </a>
-                        <a href="#reception" class="nav-link">
+                        <a href="#family-portraits" class="nav-link">
                             Family Portraits
                         </a>
-                        <a href="#reception" class="nav-link">
+                        <a href="#cocktail-hour" class="nav-link">
                             Cocktail Hour
                         </a>
-                        <a href="#reception" class="nav-link">
+                        <a href="#couple-portraits" class="nav-link">
                             Bride & Groom Portraits
                         </a>
                         <a href="#reception" class="nav-link">
@@ -313,22 +392,22 @@
                     min-[901px]:flex
                 "
             >
-                <a href="#getting-ready" class="nav-link">
+                <a href="#bride-getting-ready" class="nav-link">
                     Bride Getting Ready
                 </a>
-                <a href="#getting-ready" class="nav-link">
+                <a href="#groom-getting-ready" class="nav-link">
                     Groom Getting Ready & Portraits
                 </a>
                 <a href="#ceremony" class="nav-link">
                     Ceremony
                 </a>
-                <a href="#reception" class="nav-link">
+                <a href="#family-portraits" class="nav-link">
                     Family Portraits
                 </a>
-                <a href="#reception" class="nav-link">
+                <a href="#cocktail-hour" class="nav-link">
                     Cocktail Hour
                 </a>
-                <a href="#reception" class="nav-link">
+                <a href="#couple-portraits" class="nav-link">
                     Bride & Groom Portraits
                 </a>
                 <a href="#reception" class="nav-link">

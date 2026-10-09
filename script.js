@@ -23,8 +23,8 @@ const categories = [
         id: "family-portraits"
     },
     {
-        name: "CoktailHour",
-        title: "Coktail Hour",
+        name: "CocktailHour",
+        title: "Cocktail Hour",
         id: "cocktail-hour"
     },
     {
@@ -49,6 +49,9 @@ const lightbox = document.getElementById("lightbox");
 const lightboxContent = document.getElementById("lightbox-content");
 const lightboxClose = document.getElementById("lightbox-close");
 const lightboxDownload = document.getElementById("lightbox-download");
+const heroTeaser = document.getElementById("hero-teaser");
+const heroPlay = document.getElementById("hero-play");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 let lastFocusedElement = null;
 let currentDownload = null;
@@ -227,6 +230,169 @@ function renderMasonryItems(
     });
 }
 
+// Loads gallery images only once their tile has stayed near the viewport for a
+// moment while the page isn't scrolling quickly, so sections skimmed past or
+// jumped over from the navigation don't download.
+const imageLoader = (() => {
+    const DWELL_MS = 150;
+    const FAST_SCROLL_VIEWPORTS_PER_SECOND = 3;
+
+    const loadedUrls = new Set();
+    const pending = new Map();
+    const tileImages = new WeakMap();
+
+    let lastScrollY = window.scrollY;
+    let lastScrollTime = 0;
+    let scrollSpeed = 0;
+    let timer = null;
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            const now = performance.now();
+
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    pending.set(entry.target, now);
+                } else {
+                    pending.delete(entry.target);
+                }
+            });
+
+            schedule(DWELL_MS);
+        },
+        {
+            rootMargin: "50% 0px"
+        }
+    );
+
+    function isScrollingFast() {
+        return (
+            performance.now() - lastScrollTime < 100 &&
+            scrollSpeed >
+                FAST_SCROLL_VIEWPORTS_PER_SECOND * window.innerHeight
+        );
+    }
+
+    function schedule(delay) {
+        if (timer === null) {
+            timer = setTimeout(flush, delay);
+        }
+    }
+
+    function flush() {
+        timer = null;
+
+        if (isScrollingFast()) {
+            schedule(100);
+            return;
+        }
+
+        const now = performance.now();
+        let waiting = false;
+
+        pending.forEach((since, tile) => {
+            if (!tile.isConnected) {
+                pending.delete(tile);
+                observer.unobserve(tile);
+            } else if (now - since >= DWELL_MS) {
+                load(tile);
+            } else {
+                waiting = true;
+            }
+        });
+
+        if (waiting) {
+            schedule(DWELL_MS);
+        }
+    }
+
+    function load(tile) {
+        pending.delete(tile);
+        observer.unobserve(tile);
+
+        const image = tileImages.get(tile);
+
+        loadedUrls.add(image.dataset.src);
+        image.src = image.dataset.src;
+    }
+
+    window.addEventListener(
+        "scroll",
+        () => {
+            const now = performance.now();
+            const elapsed = now - lastScrollTime;
+            const speed =
+                (Math.abs(window.scrollY - lastScrollY) / Math.max(elapsed, 1)) *
+                1000;
+
+            // Smooth over individual scroll events; restart after a pause.
+            scrollSpeed = elapsed > 100 ? speed : scrollSpeed * 0.6 + speed * 0.4;
+            lastScrollY = window.scrollY;
+            lastScrollTime = now;
+        },
+        {
+            passive: true
+        }
+    );
+
+    return {
+        observe(tile, image, url) {
+            image.dataset.src = url;
+
+            // Already fetched once (e.g. tiles rebuilt on resize): show it now.
+            if (loadedUrls.has(url)) {
+                image.src = url;
+                return;
+            }
+
+            tileImages.set(tile, image);
+            observer.observe(tile);
+        }
+    };
+})();
+
+// Reserves the tile's shape from the item's dimensions so nothing shifts as
+// images arrive, then fades the image in once it's decoded.
+function createLazyImage(item, url, alt, tile) {
+    const image = document.createElement("img");
+
+    image.alt = alt;
+    image.decoding = "async";
+
+    image.className = `
+        ${getImageClasses()}
+        pointer-events-none
+        opacity-0
+    `;
+
+    if (item.width && item.height) {
+        image.width = item.width;
+        image.height = item.height;
+        tile.style.aspectRatio = `${item.width} / ${item.height}`;
+    } else {
+        // Unknown size: hold a typical photo shape until the real one is known.
+        tile.style.aspectRatio = "3 / 2";
+    }
+
+    image.addEventListener("load", () => {
+        if (!(item.width && item.height)) {
+            tile.style.aspectRatio = "";
+        }
+
+        image
+            .decode()
+            .catch(() => {})
+            .then(() => {
+                image.classList.remove("opacity-0");
+                image.classList.add("opacity-100");
+            });
+    });
+
+    imageLoader.observe(tile, image, url);
+
+    return image;
+}
+
 function createGalleryItem(item, categoryName, index) {
     if (categoryName === "Videos") {
         return createVideoItem(item, index);
@@ -290,27 +456,12 @@ function createImageItem(item, categoryName, index) {
         `Open ${categoryName} photo ${index + 1}`
     );
 
-    const image = document.createElement("img");
-
-    image.src = item.webUrl;
-    image.alt = `${categoryName} wedding photo ${index + 1}`;
-    image.loading = "lazy";
-    image.decoding = "async";
-
-    image.className = `
-        ${getImageClasses()}
-        opacity-0
-    `;
-
-    image.addEventListener("load", () => {
-        image.classList.remove("opacity-0");
-        image.classList.add("opacity-100");
-    });
-
-    if (image.complete) {
-        image.classList.remove("opacity-0");
-        image.classList.add("opacity-100");
-    }
+    const image = createLazyImage(
+        item,
+        item.webUrl,
+        `${categoryName} wedding photo ${index + 1}`,
+        button
+    );
 
     button.appendChild(image);
 
@@ -336,6 +487,46 @@ function createVideoItem(item, index) {
         `Open wedding video ${index + 1}`
     );
 
+    const playBadge = createPlayBadge();
+
+    button.appendChild(
+        item.previewUrl
+            ? createVideoPreviewImage(item, index, button)
+            : createVideoFrame(item, button)
+    );
+    button.appendChild(playBadge);
+
+    button.addEventListener("click", () => {
+        openVideoLightbox(item, button);
+    });
+
+    return button;
+}
+
+function createVideoPreviewImage(item, index, button) {
+    const image = createLazyImage(
+        item,
+        item.previewUrl,
+        `Wedding video ${index + 1} preview`,
+        button
+    );
+
+    // Fall back to a frame from the video if the preview image is missing.
+    image.addEventListener(
+        "error",
+        () => {
+            button.style.aspectRatio = "";
+            image.replaceWith(createVideoFrame(item, button));
+        },
+        {
+            once: true
+        }
+    );
+
+    return image;
+}
+
+function createVideoFrame(item, button) {
     const video = document.createElement("video");
 
     video.className = `
@@ -376,6 +567,10 @@ function createVideoItem(item, index) {
         }
     );
 
+    return video;
+}
+
+function createPlayBadge() {
     const playBadge = document.createElement("span");
 
     playBadge.className = `
@@ -408,14 +603,7 @@ function createVideoItem(item, index) {
     playBadge.setAttribute("aria-hidden", "true");
     playBadge.textContent = "▶";
 
-    button.appendChild(video);
-    button.appendChild(playBadge);
-
-    button.addEventListener("click", () => {
-        openVideoLightbox(item, button);
-    });
-
-    return button;
+    return playBadge;
 }
 
 function openImageLightbox(item, alt, triggerElement) {
@@ -443,7 +631,7 @@ function openImageLightbox(item, alt, triggerElement) {
     showLightbox();
 }
 
-function openVideoLightbox(item, triggerElement) {
+function openVideoLightbox(item, triggerElement, { autoplay = false } = {}) {
     lastFocusedElement = triggerElement;
     setLightboxDownload(item.downloadUrl, "video");
 
@@ -454,7 +642,8 @@ function openVideoLightbox(item, triggerElement) {
     video.src = item.webUrl;
     video.controls = true;
     video.playsInline = true;
-    video.preload = "metadata";
+    video.preload = autoplay ? "auto" : "metadata";
+    video.autoplay = autoplay;
 
     video.className = `
         block
@@ -547,6 +736,8 @@ async function downloadLightboxMedia() {
 }
 
 function showLightbox() {
+    heroTeaser.pause();
+
     lightbox.classList.remove("hidden");
     lightbox.classList.add("flex");
 
@@ -580,7 +771,33 @@ function closeLightbox() {
     if (lastFocusedElement) {
         lastFocusedElement.focus();
     }
+
+    playHeroTeaser();
 }
+
+function playHeroTeaser() {
+    if (reducedMotion.matches) {
+        heroTeaser.pause();
+        return;
+    }
+
+    // Autoplay can be refused (e.g. power saving mode); the poster stays visible.
+    heroTeaser.play().catch(() => {});
+}
+
+function openHeroFilm() {
+    const filmUrl = heroPlay.closest("[data-film-url]").dataset.filmUrl;
+
+    openVideoLightbox(
+        { webUrl: filmUrl, downloadUrl: filmUrl },
+        heroPlay,
+        { autoplay: true }
+    );
+}
+
+heroPlay.addEventListener("click", openHeroFilm);
+reducedMotion.addEventListener("change", playHeroTeaser);
+playHeroTeaser();
 
 lightboxClose.addEventListener("click", closeLightbox);
 lightboxDownload.addEventListener("click", downloadLightboxMedia);
