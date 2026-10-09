@@ -201,6 +201,9 @@ function renderMasonryItems(
             container.appendChild(column);
         }
 
+        // Column heights in units of column width (columns are equal width).
+        const columnHeights = new Array(columnCount).fill(0);
+
         items.forEach((item, index) => {
             const element = createGalleryItem(
                 item,
@@ -208,7 +211,15 @@ function renderMasonryItems(
                 index
             );
 
-            const columnIndex = index % columnCount;
+            // Place each tile in the shortest column (leftmost on ties) so
+            // columns finish at similar heights. Unknown sizes count as 3:2,
+            // matching the placeholder shape.
+            const columnIndex = columnHeights.indexOf(
+                Math.min(...columnHeights)
+            );
+
+            columnHeights[columnIndex] +=
+                item.width && item.height ? item.height / item.width : 2 / 3;
 
             columns[columnIndex].appendChild(element);
         });
