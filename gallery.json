@@ -376,14 +376,6 @@
         "height": 1600
     },
     {
-        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/web-res/Bride Getting Ready/A_2bZ - Bride Getting Ready2-2.jpg",
-        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/download/Bride Getting Ready/A_2bZ - Bride Getting Ready2-2.jpg",
-        "category": "BrideGettingReady",
-        "isFavorite": false,
-        "width": 1600,
-        "height": 1067
-    },
-    {
         "webUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/web-res/Bride Getting Ready/A_2bZ - Bride Getting Ready2-3.jpg",
         "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/download/Bride Getting Ready/A_2bZ - Bride Getting Ready2-3.jpg",
         "category": "BrideGettingReady",
@@ -2434,6 +2426,14 @@
     {
         "webUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/web-res/Ceremony/A_2bZ - Ceremony-93.jpg",
         "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/download/Ceremony/A_2bZ - Ceremony-93.jpg",
+        "category": "Ceremony",
+        "isFavorite": false,
+        "width": 1600,
+        "height": 1067
+    },
+    {
+        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/web-res/Bride Getting Ready/A_2bZ - Bride Getting Ready2-2.jpg",
+        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/download/Bride Getting Ready/A_2bZ - Bride Getting Ready2-2.jpg",
         "category": "Ceremony",
         "isFavorite": false,
         "width": 1600,
