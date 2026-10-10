@@ -9008,31 +9008,39 @@
         "height": 1064
     },
     {
-        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/videos/Alex + Zachary Wedding.mp4",
-        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/videos/Alex + Zachary Wedding.mp4",
+        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/videos/Alex + Zachary Wedding.mp4",
+        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/videos/Alex + Zachary Wedding.mp4",
         "category": "Videos",
         "isFavorite": false,
-        "previewUrl": "https://zachaslax.blob.core.windows.net/wedding/previews/Alex + Zachary Wedding.jpg"
+        "previewUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/previews/Alex + Zachary Wedding.jpg",
+        "width": 1920,
+        "height": 816
     },
     {
-        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/videos/Alex + Zachary Ceremony.mp4",
-        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/videos/Alex + Zachary Ceremony.mp4",
+        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/videos/Alex + Zachary Ceremony.mp4",
+        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/videos/Alex + Zachary Ceremony.mp4",
         "category": "Videos",
         "isFavorite": false,
-        "previewUrl": "https://zachaslax.blob.core.windows.net/wedding/previews/Alex + Zachary Ceremony.jpg"
+        "previewUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/previews/Alex + Zachary Ceremony.jpg",
+        "width": 1920,
+        "height": 1080
     },
     {
-        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/videos/Alex + Zachary Speeches.mp4",
-        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/videos/Alex + Zachary Speeches.mp4",
+        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/videos/Alex + Zachary Speeches.mp4",
+        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/videos/Alex + Zachary Speeches.mp4",
         "category": "Videos",
         "isFavorite": false,
-        "previewUrl": "https://zachaslax.blob.core.windows.net/wedding/previews/Alex + Zachary Speeches.jpg"
+        "previewUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/previews/Alex + Zachary Speeches.jpg",
+        "width": 1920,
+        "height": 1080
     },
     {
-        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/videos/Alex + Zachary Formal Dance.mp4",
-        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/videos/Alex + Zachary Formal Dance.mp4",
+        "webUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/videos/Alex + Zachary Formal Dance.mp4",
+        "downloadUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/videos/Alex + Zachary Formal Dance.mp4",
         "category": "Videos",
         "isFavorite": false,
-        "previewUrl": "https://zachaslax.blob.core.windows.net/wedding/previews/Alex + Zachary Formal Dance.jpg"
+        "previewUrl": "https://zachaslax.blob.core.windows.net/wedding/photos/previews/Alex + Zachary Formal Dance.jpg",
+        "width": 1920,
+        "height": 1080
     }
 ]

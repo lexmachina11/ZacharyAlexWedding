@@ -40,7 +40,8 @@ const categories = [
     {
         name: "Videos",
         title: "Videos",
-        id: "videos"
+        id: "videos",
+        maxColumns: 2
     }
 ];
 
@@ -142,13 +143,19 @@ function renderGallery(items) {
 
         const grid = document.createElement("div");
 
-        grid.className = `
-            grid
-            grid-cols-2
-            gap-[2px]
-            min-[601px]:grid-cols-3
-            min-[901px]:grid-cols-4
-        `;
+        grid.className = category.maxColumns === 2
+            ? `
+                grid
+                grid-cols-2
+                gap-[2px]
+            `
+            : `
+                grid
+                grid-cols-2
+                gap-[2px]
+                min-[601px]:grid-cols-3
+                min-[901px]:grid-cols-4
+            `;
 
         section.appendChild(heading);
         section.appendChild(grid);
@@ -156,7 +163,8 @@ function renderGallery(items) {
         renderMasonryItems(
             grid,
             categoryItems,
-            category.name
+            category.name,
+            category.maxColumns
         );
 
         galleryContainer.appendChild(section);
@@ -166,18 +174,19 @@ function renderGallery(items) {
 function renderMasonryItems(
     container,
     items,
-    categoryName
+    categoryName,
+    maxColumns = Infinity
 ) {
     function getColumnCount() {
+        let columnCount = 2;
+
         if (window.innerWidth >= 901) {
-            return 4;
+            columnCount = 4;
+        } else if (window.innerWidth >= 601) {
+            columnCount = 3;
         }
 
-        if (window.innerWidth >= 601) {
-            return 3;
-        }
-
-        return 2;
+        return Math.min(columnCount, maxColumns);
     }
 
     function render() {
@@ -418,7 +427,6 @@ function getGalleryItemClasses() {
         relative
         block
         w-full
-        cursor-zoom-in
         overflow-hidden
         rounded-none
         border-0
@@ -459,7 +467,10 @@ function getMediaClasses() {
 function createImageItem(item, categoryName, index) {
     const button = document.createElement("button");
 
-    button.className = getGalleryItemClasses();
+    button.className = `
+        ${getGalleryItemClasses()}
+        cursor-zoom-in
+    `;
     button.type = "button";
 
     button.setAttribute(
