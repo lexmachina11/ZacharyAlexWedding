@@ -35,12 +35,94 @@
         rel="stylesheet"
     >
 
-    <!-- Custom Styles -->
-     <link
-        rel="stylesheet"
-        type="text/tailwindcss"
-        href="style.css"
-    >
+    <!-- Custom Styles (inline: the Tailwind browser build only compiles inline style blocks) -->
+    <style type="text/tailwindcss">
+        @layer components {
+            .nav-link {
+                @apply
+                    text-[#777]
+                    no-underline
+                    transition-colors
+                    duration-150
+                    hover:text-[#222]
+                    focus-visible:text-[#222]
+                    motion-reduce:transition-none;
+            }
+
+            /*
+             * Desktop navigation
+             */
+            .desktop-nav .nav-link {
+                @apply
+                    relative
+                    shrink-0
+                    whitespace-nowrap
+                    py-[1.1rem]
+                    text-[0.68rem]
+                    leading-[1.4]
+                    tracking-[0.01em];
+            }
+
+            .desktop-nav .nav-link::after {
+                content: "";
+
+                @apply
+                    absolute
+                    right-0
+                    bottom-2
+                    left-0
+                    h-px
+                    origin-center
+                    scale-x-0
+                    bg-[#222]
+                    transition-transform
+                    duration-200
+                    motion-reduce:transition-none;
+            }
+
+            .desktop-nav .nav-link:hover::after,
+            .desktop-nav .nav-link:focus-visible::after {
+                @apply scale-x-100;
+            }
+
+            /*
+             * Section bar menu
+             */
+            #section-menu .nav-link {
+                @apply
+                    block
+                    border-b
+                    border-[#f3f3f3]
+                    py-[0.85rem]
+                    text-[0.72rem]
+                    font-medium
+                    tracking-[0.025em]
+                    last:border-b-0;
+            }
+
+            #section-menu .nav-link[aria-current] {
+                @apply
+                    font-semibold
+                    text-[#222];
+            }
+
+            /*
+             * Dropdown navigation
+             */
+            .mobile-nav .nav-link {
+                @apply
+                    block
+                    w-full
+                    border-b
+                    border-[#f3f3f3]
+                    py-4
+                    text-[0.7rem]
+                    font-medium
+                    tracking-[0.025em]
+                    last:border-b-0;
+            }
+        }
+    </style>
 </head>
 
 <body
@@ -55,6 +137,155 @@
         [text-rendering:optimizeLegibility]
     "
 >
+    <!-- Section bar: slides in once the main navigation scrolls out of view -->
+    <div
+        id="section-bar"
+        class="
+            fixed
+            inset-x-0
+            top-0
+            z-40
+            -translate-y-full
+            border-b
+            border-[#f3f3f3]
+            bg-white/[0.97]
+            opacity-0
+            shadow-[0_6px_20px_rgba(0,0,0,0.04)]
+            backdrop-blur-sm
+            transition-[translate,opacity]
+            duration-300
+            motion-reduce:transition-none
+        "
+        inert
+    >
+        <div
+            class="
+                relative
+                mx-auto
+                flex
+                h-14
+                w-full
+                max-w-[1500px]
+                items-center
+                justify-between
+                gap-4
+                px-4
+                min-[601px]:px-[clamp(1.5rem,3vw,3rem)]
+            "
+        >
+            <a
+                href="#top"
+                class="
+                    nav-link
+                    hidden
+                    shrink-0
+                    text-[0.62rem]
+                    font-semibold
+                    tracking-[0.12em]
+                    uppercase
+                    min-[601px]:block
+                "
+            >
+                Alex &amp; Zachary
+            </a>
+
+            <p
+                id="section-bar-title"
+                class="
+                    m-0
+                    min-w-0
+                    truncate
+                    text-[0.95rem]
+                    font-semibold
+                    text-[#222]
+                    min-[601px]:absolute
+                    min-[601px]:left-1/2
+                    min-[601px]:max-w-[50%]
+                    min-[601px]:-translate-x-1/2
+                    min-[601px]:text-[1.05rem]
+                "
+            ></p>
+
+            <button
+                id="section-menu-button"
+                class="
+                    group
+                    -mr-2
+                    grid
+                    size-11
+                    shrink-0
+                    cursor-pointer
+                    place-items-center
+                    rounded-full
+                    border-0
+                    bg-transparent
+                    text-[#444]
+                    transition-colors
+                    duration-150
+                    hover:bg-[#f4f4f4]
+                    hover:text-[#111]
+                    focus-visible:outline-none
+                    focus-visible:ring-2
+                    focus-visible:ring-[#777]
+                    motion-reduce:transition-none
+                "
+                type="button"
+                aria-label="Jump to a section"
+                aria-expanded="false"
+                aria-controls="section-menu"
+            >
+                <svg
+                    class="size-5 group-aria-expanded:hidden"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                >
+                    <path d="M4 7h16M4 12h16M4 17h16" />
+                </svg>
+
+                <svg
+                    class="hidden size-5 group-aria-expanded:block"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                >
+                    <path d="M6 6l12 12M18 6 6 18" />
+                </svg>
+            </button>
+        </div>
+
+        <nav
+            id="section-menu"
+            class="
+                absolute
+                top-full
+                right-0
+                left-0
+                hidden
+                max-h-[calc(100svh-3.5rem)]
+                overflow-y-auto
+                border-t
+                border-[#f3f3f3]
+                bg-white
+                px-4
+                py-2
+                shadow-[0_12px_30px_rgba(0,0,0,0.08)]
+                min-[601px]:right-[clamp(1.5rem,3vw,3rem)]
+                min-[601px]:left-auto
+                min-[601px]:w-72
+                min-[601px]:border
+                min-[601px]:px-5
+            "
+            aria-label="Gallery sections"
+        ></nav>
+    </div>
+
     <header
         class="
             relative

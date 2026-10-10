@@ -53,8 +53,22 @@ const lightboxDownload = document.getElementById("lightbox-download");
 const heroTeaser = document.getElementById("hero-teaser");
 const heroPlay = document.getElementById("hero-play");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const mainNav = document.querySelector(
+    'nav[aria-label="Wedding gallery categories"]'
+);
+const sectionBar = document.getElementById("section-bar");
+const sectionBarTitle = document.getElementById("section-bar-title");
+const sectionMenuButton = document.getElementById("section-menu-button");
+const sectionMenu = document.getElementById("section-menu");
 
 let lastFocusedElement = null;
+// Every photo in page order (all sections except Videos), for arrow-key
+// stepping in the lightbox, and the position of the open photo in it.
+let galleryPhotos = [];
+const galleryPhotoIndex = new Map();
+let lightboxPhotoIndex = null;
+// Gallery tile for each photo, so closing the lightbox returns focus there.
+const photoTiles = new WeakMap();
 let currentDownload = null;
 
 async function loadGallery() {
@@ -70,6 +84,7 @@ async function loadGallery() {
         const items = await response.json();
 
         renderGallery(items);
+        updateCurrentSection();
     } catch (error) {
         console.error(error);
 
@@ -94,11 +109,24 @@ async function loadGallery() {
 
 function renderGallery(items) {
     galleryContainer.innerHTML = "";
+    galleryPhotos = [];
+    galleryPhotoIndex.clear();
 
     categories.forEach((category) => {
         const categoryItems = items.filter(
             (item) => item.category === category.name
         );
+
+        if (category.name !== "Videos") {
+            categoryItems.forEach((item, index) => {
+                galleryPhotoIndex.set(item, galleryPhotos.length);
+                galleryPhotos.push({
+                    item,
+                    categoryName: category.name,
+                    index
+                });
+            });
+        }
 
         const section = document.createElement("section");
 
@@ -421,6 +449,10 @@ function createGalleryItem(item, categoryName, index) {
     return createImageItem(item, categoryName, index);
 }
 
+function getPhotoAlt(categoryName, index) {
+    return `${categoryName} wedding photo ${index + 1}`;
+}
+
 function getGalleryItemClasses() {
     return `
         group
@@ -481,14 +513,15 @@ function createImageItem(item, categoryName, index) {
     const image = createLazyImage(
         item,
         item.webUrl,
-        `${categoryName} wedding photo ${index + 1}`,
+        getPhotoAlt(categoryName, index),
         button
     );
 
     button.appendChild(image);
+    photoTiles.set(item, button);
 
     button.addEventListener("click", () => {
-        openImageLightbox(item, image.alt, button);
+        openImageLightbox(item);
     });
 
     return button;
@@ -628,16 +661,12 @@ function createPlayBadge() {
     return playBadge;
 }
 
-function openImageLightbox(item, alt, triggerElement) {
-    lastFocusedElement = triggerElement;
-    setLightboxDownload(item.downloadUrl, "image");
+function openImageLightbox(item) {
+    lightboxPhotoIndex = galleryPhotoIndex.get(item);
 
     lightboxContent.innerHTML = "";
 
     const image = document.createElement("img");
-
-    image.src = item.webUrl;
-    image.alt = alt;
 
     image.className = `
         block
@@ -650,10 +679,43 @@ function openImageLightbox(item, alt, triggerElement) {
 
     lightboxContent.appendChild(image);
 
+    showLightboxPhoto();
     showLightbox();
 }
 
+function showLightboxPhoto() {
+    const { item, categoryName, index } = galleryPhotos[lightboxPhotoIndex];
+    const image = lightboxContent.querySelector("img");
+
+    image.src = item.webUrl;
+    image.alt = getPhotoAlt(categoryName, index);
+
+    setLightboxDownload(item.downloadUrl, "image");
+    lastFocusedElement = photoTiles.get(item) || lastFocusedElement;
+
+    // Preload the neighbours so stepping with the arrow keys is instant.
+    [lightboxPhotoIndex - 1, lightboxPhotoIndex + 1].forEach((neighbour) => {
+        if (galleryPhotos[neighbour]) {
+            new Image().src = galleryPhotos[neighbour].item.webUrl;
+        }
+    });
+}
+
+// Steps through every photo in page order, crossing into the next or previous
+// section at the ends of each one.
+function stepLightboxPhoto(direction) {
+    const nextIndex = lightboxPhotoIndex + direction;
+
+    if (nextIndex < 0 || nextIndex >= galleryPhotos.length) {
+        return;
+    }
+
+    lightboxPhotoIndex = nextIndex;
+    showLightboxPhoto();
+}
+
 function openVideoLightbox(item, triggerElement, { autoplay = false } = {}) {
+    lightboxPhotoIndex = null;
     lastFocusedElement = triggerElement;
     setLightboxDownload(item.downloadUrl, "video");
 
@@ -780,6 +842,7 @@ function closeLightbox() {
     }
 
     lightboxContent.innerHTML = "";
+    lightboxPhotoIndex = null;
     currentDownload = null;
     lightboxDownload.disabled = true;
 
@@ -817,6 +880,131 @@ function openHeroFilm() {
     );
 }
 
+function setSectionBarVisible(visible) {
+    sectionBar.classList.toggle("-translate-y-full", !visible);
+    sectionBar.classList.toggle("opacity-0", !visible);
+    sectionBar.inert = !visible;
+
+    if (!visible) {
+        closeSectionMenu();
+    }
+}
+
+function buildSectionMenu() {
+    categories.forEach((category) => {
+        const link = document.createElement("a");
+
+        link.href = `#${category.id}`;
+        link.className = "nav-link";
+        link.textContent = category.title;
+        link.dataset.sectionId = category.id;
+
+        link.addEventListener("click", closeSectionMenu);
+
+        sectionMenu.appendChild(link);
+    });
+}
+
+function openSectionMenu() {
+    sectionMenu.classList.remove("hidden");
+    sectionMenuButton.setAttribute("aria-expanded", "true");
+}
+
+function closeSectionMenu() {
+    sectionMenu.classList.add("hidden");
+    sectionMenuButton.setAttribute("aria-expanded", "false");
+}
+
+// The current section is the last one whose top has passed under the bar.
+// At the very bottom of the page, the last section counts even if it's too
+// short to reach the bar.
+function updateCurrentSection() {
+    const sections = categories
+        .map((category) => ({
+            category,
+            element: document.getElementById(category.id)
+        }))
+        .filter(({ element }) => element);
+
+    if (sections.length === 0) {
+        return;
+    }
+
+    // Sections land 80px from the top (scroll-mt-20) after a jump; stay clear of that.
+    const threshold = sectionBar.offsetHeight + 40;
+    const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+    let current = sections[0];
+
+    sections.forEach((section) => {
+        if (section.element.getBoundingClientRect().top <= threshold) {
+            current = section;
+        }
+    });
+
+    if (atBottom) {
+        current = sections[sections.length - 1];
+    }
+
+    if (sectionBarTitle.textContent !== current.category.title) {
+        sectionBarTitle.textContent = current.category.title;
+    }
+
+    sectionMenu.querySelectorAll("a").forEach((link) => {
+        if (link.dataset.sectionId === current.category.id) {
+            link.setAttribute("aria-current", "location");
+        } else {
+            link.removeAttribute("aria-current");
+        }
+    });
+}
+
+let sectionUpdateQueued = false;
+
+window.addEventListener(
+    "scroll",
+    () => {
+        if (sectionUpdateQueued) {
+            return;
+        }
+
+        sectionUpdateQueued = true;
+
+        requestAnimationFrame(() => {
+            sectionUpdateQueued = false;
+            updateCurrentSection();
+        });
+    },
+    {
+        passive: true
+    }
+);
+
+// Show the bar only once the main navigation has scrolled up out of view.
+new IntersectionObserver(([entry]) => {
+    setSectionBarVisible(
+        !entry.isIntersecting && entry.boundingClientRect.top < 0
+    );
+}).observe(mainNav);
+
+sectionMenuButton.addEventListener("click", () => {
+    if (sectionMenu.classList.contains("hidden")) {
+        openSectionMenu();
+    } else {
+        closeSectionMenu();
+    }
+});
+
+document.addEventListener("click", (event) => {
+    if (!sectionBar.contains(event.target)) {
+        closeSectionMenu();
+    }
+});
+
+buildSectionMenu();
+
 heroPlay.addEventListener("click", openHeroFilm);
 reducedMotion.addEventListener("change", playHeroTeaser);
 playHeroTeaser();
@@ -835,10 +1023,23 @@ lightbox.addEventListener("click", (event) => {
 
 document.addEventListener("keydown", (event) => {
     if (
-        event.key === "Escape" &&
-        !lightbox.classList.contains("hidden")
+        lightboxPhotoIndex !== null &&
+        (event.key === "ArrowLeft" || event.key === "ArrowRight")
     ) {
+        event.preventDefault();
+        stepLightboxPhoto(event.key === "ArrowRight" ? 1 : -1);
+        return;
+    }
+
+    if (event.key !== "Escape") {
+        return;
+    }
+
+    if (!lightbox.classList.contains("hidden")) {
         closeLightbox();
+    } else if (sectionMenuButton.getAttribute("aria-expanded") === "true") {
+        closeSectionMenu();
+        sectionMenuButton.focus();
     }
 });
 
